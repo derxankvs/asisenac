@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -27,9 +28,9 @@
       width: 100%;
       padding: 10px;
       background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #ccc;
+      border: 1px solid #ffffff;
       border-radius: 6px;
-      color: #fff;
+      color: #000000;
       margin-bottom: 10px;
     }
     input:focus,
@@ -74,7 +75,7 @@
       section.style.display = section.style.display === "block" ? "none" : "block";
     }
 
-    document.getElementById("areaAdmin").style.display = "block"; // Exibir admin-area sem senha
+    document.getElementById("areaAdmin").style.display = "block";
 
     function adicionarItem() {
       const div = document.createElement("div");
@@ -96,12 +97,15 @@
       contatosList.appendChild(item);
     });
 
+    let ultimoIdGerado = "";
+
     function gerarCarga() {
       const itensDivs = document.querySelectorAll(".lista-item");
       if (itensDivs.length === 0) {
         alert("Adicione pelo menos um produto para gerar a carga.");
         return;
       }
+
       const itens = Array.from(itensDivs).map((div) => {
         const inputs = div.querySelectorAll("input");
         return {
@@ -127,11 +131,8 @@
         .then((res) => res.json())
         .then((data) => {
           if (data.id) {
-            const id = data.id;
-            document.getElementById("idGerado").innerText = "ID gerado: " + id;
-            const mensagem = `Nova carga criada para o setor ${setor}. ID da carga: ${id}`;
-            const url = `https://wa.me/${numeroBase}?text=${encodeURIComponent(mensagem)}`;
-            window.open(url, '_blank');
+            ultimoIdGerado = data.id;
+            document.getElementById("idGerado").innerText = "ID gerado: " + ultimoIdGerado;
           } else {
             alert("Erro ao gerar carga.");
           }
@@ -139,10 +140,18 @@
     }
 
     function enviarMensagem(nome) {
-      const mensagem = `Olá ${nome}, foi criada uma nova carga.`;
+      if (!ultimoIdGerado) {
+        alert("Gere uma carga antes de enviar a mensagem.");
+        return;
+      }
+
+      const setor = document.getElementById("setorCarga").value;
+      const mensagem = `Olá ${nome}, uma nova carga foi criada para o setor ${setor}. ID da carga: ${ultimoIdGerado}`;
       const url = `https://wa.me/${numeroBase}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, '_blank');
     }
   </script>
 </body>
 </html>
+
+
