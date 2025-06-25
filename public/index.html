@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - A.S.I</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>A.S.I</h1>
+    <p>Acesso ao sistema</p>
+    <form id="loginForm">
+      <label>E-mail:</label>
+      <input type="email" id="email" placeholder="exemplo@dominio.com" required>
+
+      <label>Senha:</label>
+      <input type="password" id="senha" required maxlength="20">
+
+      <button type="submit">Entrar</button>
+      <p>Não tem conta? <a href="cadastro.html">Cadastre-se aqui</a></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.sucesso) {
+          alert("✅ Login realizado com sucesso!");
+          window.location.href = "admin.html";
+        } else {
+          alert("❌ E-mail ou senha incorretos.");
+        }
+      })
+      .catch(() => alert("⚠️ Erro ao conectar com o servidor."));
+    });
+  </script>
+</body>
+</html>
