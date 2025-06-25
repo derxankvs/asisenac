@@ -24,24 +24,9 @@
   <script>
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const senha = document.getElementById("senha").value;
-
-      fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, senha })
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.sucesso) {
-          alert("✅ Login realizado com sucesso!");
-          window.location.href = "admin.html";
-        } else {
-          alert("❌ E-mail ou senha incorretos.");
-        }
-      })
-      .catch(() => alert("⚠️ Erro ao conectar com o servidor."));
+      // Aqui ele ignora validações com servidor e entra direto
+      alert("✅ Login liberado. Redirecionando...");
+      window.location.href = "admin.html";
     });
   </script>
 </body>

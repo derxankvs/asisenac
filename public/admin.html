@@ -45,24 +45,6 @@
     <h1>Painel do Administrador</h1>
 
     <div class="admin-area" id="areaAdmin">
-      <button class="toggle-section" onclick="toggleSection('adicionar')">➕ Adicionar Manualmente</button>
-      <section id="adicionar">
-        <h2>Adicionar Manualmente</h2>
-        <form id="formAdicionar">
-          <input type="text" id="nome" placeholder="Nome completo" required />
-          <input type="text" id="cpf" placeholder="CPF" required />
-          <input type="text" id="nascimento" placeholder="Data nascimento (ddmmaaaa)" required />
-          <select id="funcao" required>
-            <option value="menor">Repositor Menor Aprendiz</option>
-            <option value="maior">Repositor Maior</option>
-          </select>
-          <input type="text" id="setor" placeholder="Setor" required />
-          <input type="email" id="email" placeholder="Email" required />
-          <input type="text" id="senha" placeholder="Senha (6 números)" required />
-          <button type="submit">Adicionar</button>
-        </form>
-      </section>
-
       <button class="toggle-section" onclick="toggleSection('carga')">📦 Criar Carga</button>
       <section id="carga">
         <h2>Selecionar Itens para Carga</h2>
@@ -93,29 +75,6 @@
     }
 
     document.getElementById("areaAdmin").style.display = "block"; // Exibir admin-area sem senha
-
-    document.getElementById("formAdicionar").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const dados = {
-        nome: document.getElementById("nome").value,
-        cpf: document.getElementById("cpf").value,
-        nascimento: document.getElementById("nascimento").value,
-        funcao: document.getElementById("funcao").value,
-        setor: document.getElementById("setor").value,
-        email: document.getElementById("email").value,
-        senha: document.getElementById("senha").value,
-      };
-
-      fetch("/api/cadastrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(data.sucesso ? "Usuário adicionado com sucesso." : "CPF já cadastrado.");
-        });
-    });
 
     function adicionarItem() {
       const div = document.createElement("div");
@@ -177,6 +136,12 @@
             alert("Erro ao gerar carga.");
           }
         });
+    }
+
+    function enviarMensagem(nome) {
+      const mensagem = `Olá ${nome}, foi criada uma nova carga.`;
+      const url = `https://wa.me/${numeroBase}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, '_blank');
     }
   </script>
 </body>
