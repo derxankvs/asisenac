@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    color: #fff;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.07);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease-in-out;
+}
+
+h1,
+h2,
+p {
+    text-align: center;
+    color: #f1c40f;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin: 12px 0 6px;
+    color: #ecf0f1;
+    font-weight: bold;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+form input:focus, form select:focus {
+  background-color: #111111;
+  outline: none;
+}
+
+
+form input:focus,
+form select:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+a {
+    color: #f1c40f;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul#contatos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+ul#contatos li {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    width: 120px;
+    text-align: center;
+    color: #fff;
+    transition: transform 0.2s;
+}
+
+ul#contatos li:hover {
+    transform: scale(1.05);
+}
+
+ul#contatos li a {
+    display: block;
+    color: #fff;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+ul#contatos li img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f1c40f;
+}
+
+/* Área admin especial */
+.admin-area section {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.admin-area input,
+.admin-area select {
+    margin-top: 8px;
+}

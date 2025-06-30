@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>Buscar Carga - A.S.I</title>
+<link href="style.css" rel="stylesheet"/>
+<style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      color: #fff;
+    }
+    input:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      outline: none;
+      border-color: #f1c40f;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #f1c40f;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #resultadoBusca {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img alt="Logo" src="/assets/logo.png" style="
+      width: 180px;
+      box-shadow: 0 0 0px rgba(255, 255, 255, 0.6);
+      margin: 20px;
+      border-radius: 10px;
+    "/>
+  </header>
+<div class="container">
+<h1>🔍 Buscar Carga por ID</h1>
+<input id="idBusca" placeholder="Digite o ID" type="text"/>
+<button onclick="buscarCarga()">Buscar</button>
+<div id="resultadoBusca"></div>
+</div>
+<script>
+    function buscarCarga() {
+      const id = document.getElementById("idBusca").value.trim();
+      if (!id) {
+        alert("Digite um ID para buscar.");
+        return;
+      }
+
+      fetch("/api/cargas/" + id)
+        .then(res => res.json())
+        .then(data => {
+          const resultado = document.getElementById("resultadoBusca");
+
+          if (data.erro) {
+            resultado.innerText = "❌ Carga não encontrada.";
+          } else {
+            const html =
+              `<h3>Setor: ${data.setor}</h3><ul>` +
+              data.itens.map(i => `<li>${i.quantidade}x ${i.produto}</li>`).join("") +
+              "</ul>";
+            resultado.innerHTML = html;
+          }
+        })
+        .catch(() => {
+          alert("Erro ao buscar carga.");
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>Cadastro - A.S.I</title>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+  <header>
+    <img alt="Logo" src="/assets/logo.png" style="
+      width: 180px;
+      box-shadow: 0 0 0px rgba(255, 255, 255, 0.6);
+      margin: 20px;
+      border-radius: 10px;
+    "/>
+  </header>
+<div class="container">
+<h1>Cadastro no A.S.I</h1>
+<form id="cadastroForm">
+<label>Nome Completo:</label>
+<input id="nome" required="" type="text"/>
+<label>CPF (somente números):</label>
+<input id="cpf" maxlength="11" pattern="\d{11}" required="" type="text"/>
+<label>Data de Nascimento (ddmmaaaa):</label>
+<input id="nascimento" maxlength="8" pattern="\d{8}" required="" type="text"/>
+<label>Função:</label>
+<select id="funcao" required="">
+<option value="menor">Repositor Menor Aprendiz</option>
+<option value="maior">Repositor Maior</option>
+</select>
+<label>Setor de Atuação:</label>
+<select id="setor" required="">
+<option value="Cereais">Cereais</option>
+<option value="Padaria">Padaria</option>
+<option value="Laticínios">Laticínios</option>
+<option value="Limpeza">Limpeza</option>
+<option value="Bebidas">Bebidas</option>
+<option value="Doces">Doces</option>
+<option value="Açougue">Açougue</option>
+</select>
+<label>Email:</label>
+<input id="email" required="" type="email"/>
+<label>Senha (6 dígitos numéricos):</label>
+<input id="senha" maxlength="6" pattern="\d{6}" required="" type="password"/>
+<button type="submit">Cadastrar</button>
+</form>
+</div>
+<script>
+    document.getElementById("cadastroForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const dados = {
+        nome: document.getElementById("nome").value,
+        cpf: document.getElementById("cpf").value,
+        nascimento: document.getElementById("nascimento").value,
+        funcao: document.getElementById("funcao").value,
+        setor: document.getElementById("setor").value,
+        email: document.getElementById("email").value,
+        senha: document.getElementById("senha").value
+      };
+
+      fetch("/api/cadastrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.sucesso) {
+          alert("✅ Cadastro salvo com sucesso!");
+          window.location.href = "index.html";
+        } else {
+          alert("❌ CPF já cadastrado.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

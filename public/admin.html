@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>Admin + Solicitar Carga - A.S.I</title>
+<link href="style.css" rel="stylesheet"/>
+<style>
+    .admin-area { margin-top: 20px; }
+    .admin-area section {
+      margin-bottom: 30px;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .admin-area button.toggle-section {
+      background-color: #f1c40f;
+      color: #000;
+      margin: 10px 0;
+    }
+    .lista-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #ffffff;
+      border-radius: 6px;
+      color: #000000;
+      margin-bottom: 10px;
+    }
+    input:focus,
+    select:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      outline: none;
+      border-color: #f1c40f;
+    }
+</style>
+</head>
+<body>
+  <header>
+    <img alt="Logo" src="/assets/logo.png" style="
+      width: 180px;
+      box-shadow: 0 0 0px rgba(255, 255, 255, 0.6);
+      margin: 20px;
+      border-radius: 10px;
+    "/>
+  </header>
+  
+  <a href="buscar.html"
+     style="position: absolute; top: 20px; right: 20px; padding: 10px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; z-index: 999;">
+    Ir para Buscar
+  </a>
+
+  <div class="container">
+    <h1>Painel do Administrador</h1>
+    <div class="admin-area" id="areaAdmin">
+      <button class="toggle-section" onclick="toggleSection('carga')">📦 Criar Carga</button>
+      <section id="carga">
+        <h2>Selecionar Itens para Carga</h2>
+        <div id="itensCarga"></div>
+        <button onclick="adicionarItem()" type="button">Adicionar Produto</button>
+        <select id="setorCarga">
+          <option value="Cereais">Cereais</option>
+          <option value="Padaria">Padaria</option>
+          <option value="Laticínios">Laticínios</option>
+          <option value="Limpeza">Limpeza</option>
+          <option value="Bebidas">Bebidas</option>
+          <option value="Doces">Doces</option>
+          <option value="Açougue">Açougue</option>
+        </select>
+        <button onclick="gerarCarga()">Gerar Carga</button>
+        <p id="idGerado" style="margin-top:10px; font-weight:bold; color:#f1c40f;"></p>
+        <h2 style="margin-top: 30px; color: #f1c40f;">Contatos Disponíveis:</h2>
+        <ul id="contatos" style="list-style: none; padding-left: 0;"></ul>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.style.display = section.style.display === "block" ? "none" : "block";
+    }
+
+    document.getElementById("areaAdmin").style.display = "block";
+
+    function adicionarItem() {
+      const div = document.createElement("div");
+      div.className = "lista-item";
+      div.innerHTML = `
+        <input type="text" placeholder="Produto" required />
+        <input type="number" placeholder="Quantidade" required min="1" />
+      `;
+      document.getElementById("itensCarga").appendChild(div);
+    }
+
+    const contatos = ["Patrick", "Carlos", "Kauan", "Pablo"];
+    const numeroBase = "5543996054257";
+    const contatosList = document.getElementById("contatos");
+
+    contatos.forEach(nome => {
+      const item = document.createElement("li");
+      item.innerHTML = `<a href="#" onclick="enviarMensagem('${nome}')">${nome}</a>`;
+      contatosList.appendChild(item);
+    });
+
+    let ultimoIdGerado = "";
+
+    function gerarCarga() {
+      const itensDivs = document.querySelectorAll(".lista-item");
+      if (itensDivs.length === 0) {
+        alert("Adicione pelo menos um produto para gerar a carga.");
+        return;
+      }
+
+      const itens = Array.from(itensDivs).map((div) => {
+        const inputs = div.querySelectorAll("input");
+        return {
+          produto: inputs[0].value.trim(),
+          quantidade: parseInt(inputs[1].value),
+        };
+      });
+
+      for (const item of itens) {
+        if (!item.produto || isNaN(item.quantidade) || item.quantidade < 1) {
+          alert("Preencha todos os campos corretamente.");
+          return;
+        }
+      }
+
+      const setor = document.getElementById("setorCarga").value;
+
+      fetch("/api/cargas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ setor, itens }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.id) {
+            ultimoIdGerado = data.id;
+            document.getElementById("idGerado").innerText = "ID gerado: " + ultimoIdGerado;
+          } else {
+            alert("Erro ao gerar carga.");
+          }
+        });
+    }
+
+    function enviarMensagem(nome) {
+      if (!ultimoIdGerado) {
+        alert("Gere uma carga antes de enviar a mensagem.");
+        return;
+      }
+
+      const setor = document.getElementById("setorCarga").value;
+      const mensagem = `Olá ${nome}, uma nova carga foi criada para o setor ${setor}. ID da carga: ${ultimoIdGerado}`;
+      const url = `https://wa.me/${numeroBase}?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

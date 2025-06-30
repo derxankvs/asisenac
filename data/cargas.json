@@ -1,0 +1,16 @@
+[
+  {
+    "id": "kaetdn",
+    "setor": "Cereais",
+    "itens": [
+      {
+        "produto": "Kajs",
+        "quantidade": 1
+      },
+      {
+        "produto": "Nabs",
+        "quantidade": 2
+      }
+    ]
+  }
+]

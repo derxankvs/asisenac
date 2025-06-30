@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<title>Login - A.S.I</title>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+  <header>
+    <img alt="Logo" src="/assets/logo.png" style="
+      width: 180px;
+      box-shadow: 0 0 0px rgba(255, 255, 255, 0.6);
+      margin: 20px;
+      border-radius: 10px;
+    "/>
+  </header>
+<div class="container">
+<h1>A.S.I</h1>
+<p>Acesso ao sistema</p>
+<form id="loginForm">
+<label>E-mail:</label>
+<input id="email" placeholder="exemplo@dominio.com" required="" type="email"/>
+<label>Senha:</label>
+<input id="senha" maxlength="20" required="" type="password"/>
+<button type="submit">Entrar</button>
+<p>Não tem conta? <a href="cadastro.html">Cadastre-se aqui</a></p>
+</form>
+</div>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Aqui ele ignora validações com servidor e entra direto
+      alert("✅ Login liberado. Redirecionando...");
+      window.location.href = "admin.html";
+    });
+  </script>
+</body>
+</html>
