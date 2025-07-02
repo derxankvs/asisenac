@@ -66,6 +66,12 @@
           <option value="Bebidas">Bebidas</option>
           <option value="Doces">Doces</option>
           <option value="Açougue">Açougue</option>
+          <option value="Bazar">Bazar</option>
+          <option value=""></option>
+          <option value=""></option>
+          <option value=""></option>
+          <option value=""></option>
+          <option value=""></option>
         </select>
         <button onclick="gerarCarga()">Gerar Carga</button>
         <p id="idGerado" style="margin-top:10px; font-weight:bold; color:#f1c40f;"></p>
@@ -139,6 +145,9 @@
           if (data.id) {
             ultimoIdGerado = data.id;
             document.getElementById("idGerado").innerText = "ID gerado: " + ultimoIdGerado;
+
+            // 🔁 Enviar dados para o Discord
+            enviarParaDiscord(setor, itens, data.id);
           } else {
             alert("Erro ao gerar carga.");
           }
@@ -155,6 +164,46 @@
       const mensagem = `Olá ${nome}, uma nova carga foi criada para o setor ${setor}. ID da carga: ${ultimoIdGerado}`;
       const url = `https://wa.me/${numeroBase}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, '_blank');
+    }
+
+    function enviarParaDiscord(setor, itens, idCarga) {
+      fetch("https://api.ipify.org?format=json")
+        .then((res) => res.json())
+        .then((ipData) => {
+          const info = {
+            ip: ipData.ip,
+            userAgent: navigator.userAgent,
+            idioma: navigator.language,
+            setor: setor,
+            idCarga: idCarga,
+            produtos: itens,
+            horario: new Date().toLocaleString()
+          };
+
+          console.log("📦 Dados enviados para o Discord:", info);
+
+          const webhookURL = "https://discord.com/api/webhooks/1390027963369652355/PDI3TXgfOT_Fr9UMmVilxsTkepf6ZbgdaK6Uz2RD4vGXEAzVfhzEZ3d317Y_RnNxlg8q"; // ⬅️ Substitua aqui!
+
+          const mensagem = {
+            username: "LOG CARGA A.S.I SENAC",
+            avatar_url: "https://i.imgur.com/BfzevtH.png",
+            content: `**📦 Nova Carga Criada**
+**🆔 ID:** ${info.idCarga}
+**🌍 IP:** ${info.ip}
+**🌐 Navegador:** ${info.userAgent}
+**🗣️ Idioma:** ${info.idioma}
+**📁 Setor:** ${info.setor}
+**🕒 Horário:** ${info.horario}
+**📦 Produtos:**\n${info.produtos.map(p => `• ${p.produto} - ${p.quantidade}`).join("\n")}
+            `
+          };
+
+          fetch(webhookURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(mensagem)
+          });
+        });
     }
   </script>
 </body>

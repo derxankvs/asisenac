@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciar Estoque - A.S.I</title>
+  <link href="style.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    h1 { color: #f1c40f; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #222;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #333;
+      text-align: left;
+    }
+    th { background-color: #333; }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 6px;
+      border: none;
+    }
+    input {
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+    }
+    button {
+      background: #f1c40f;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerenciar Estoque do Mês</h1>
+
+  <form id="formAdicionar">
+    <input type="text" id="produto" placeholder="Nome do Produto (ex: Arroz)" required />
+    <input type="number" id="quantidade" placeholder="Quantidade" min="1" required />
+    <button type="submit">Adicionar ao Estoque</button>
+  </form>
+
+  <h2>Estoque Atual</h2>
+  <table id="tabelaEstoque">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function carregarEstoque() {
+      const res = await fetch('/api/estoque');
+      const dados = await res.json();
+      const tbody = document.querySelector('#tabelaEstoque tbody');
+      tbody.innerHTML = '';
+      for (const [produto, quantidade] of Object.entries(dados)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${produto}</td><td>${quantidade}</td>`;
+        tbody.appendChild(row);
+      }
+    }
+
+    document.getElementById('formAdicionar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const produto = document.getElementById('produto').value.trim();
+      const quantidade = parseInt(document.getElementById('quantidade').value);
+      if (!produto || isNaN(quantidade)) return;
+
+      await fetch('/api/estoque/adicionar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produto, quantidade })
+      });
+
+      document.getElementById('produto').value = '';
+      document.getElementById('quantidade').value = '';
+      carregarEstoque();
+    });
+
+    carregarEstoque();
+  </script>
+</body>
+</html>
